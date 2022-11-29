@@ -1,0 +1,47 @@
+@startuml
+
+skinParam NoteBackgroundColor WhiteSmoke
+skinParam NoteFontColor Black
+skinParam ParticipantBackgroundColor WhiteSmoke
+skinParam ActorBackgroundColor WhiteSmoke
+skinParam AgentBackgroundColor White
+skinParam AgentBorderColor SkyBlue
+skinParam shadowing true
+
+!define GithubColor f8f2ff
+!define JenkinsColor d9edff
+
+actor Cron as "Cron Job"
+box Jenkins #JenkinsColor
+    participant ReleasePipeline as "Release Pipeline" #lightblue
+    participant BuildTemplate as "publish-job" #lightblue
+end box
+
+
+box GitHub #GithubColor
+    participant GithubActions as "GitHub Actions" #lightblue
+end box
+
+participant OSSRH as "OSSRH/MavenCentral"
+
+Cron -> ReleasePipeline: start nightly build
+activate ReleasePipeline
+
+autonumber 1.1
+    ReleasePipeline -> BuildTemplate: release $COMPONENT
+    note left: $COMPONENT contains the name\nand the git URL of each\nEDC component
+    activate BuildTemplate
+
+
+    BuildTemplate -> GithubActions: invoke $COMPONENT's workflows
+    note right: Must have workflow_dispatch\ntrigger
+    activate GithubActions
+    GithubActions -> GithubActions : run workflow
+    return status
+    deactivate GithubActions
+    BuildTemplate -> BuildTemplate: create release
+    BuildTemplate -> OSSRH: publish release
+
+    BuildTemplate -> ReleasePipeline: report build status
+    deactivate BuildTemplate
+@enduml

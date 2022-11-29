@@ -1,0 +1,64 @@
+@startuml
+
+skinParam NoteBackgroundColor WhiteSmoke
+skinParam NoteFontColor Black
+skinParam ParticipantBackgroundColor WhiteSmoke
+skinParam ActorBackgroundColor WhiteSmoke
+skinParam AgentBackgroundColor White
+skinParam AgentBorderColor SkyBlue
+skinParam shadowing true
+
+!define GithubColor f8f2ff
+!define JenkinsColor d9edff
+
+actor Cron as "Cron Job"
+box Jenkins #JenkinsColor
+    participant ReleasePipeline as "Release Pipeline" #lightblue
+    participant RuntimeMetamodel as "gradleplugins-job"
+    participant Connector as "connector-job"
+    participant FederatedCatalog as "catalog-job"
+    participant IdentityHub as "ih-job"
+    participant RegistrationService as "rs-job"
+end box
+
+box GitHub
+    participant GHA as "GitHub Actions"
+end box
+
+participant OSSRH as "OSSRH/MavenCentral"
+participant Discord as "Discord"
+
+Cron -> ReleasePipeline: start nightly build
+
+activate RuntimeMetamodel
+ReleasePipeline -> RuntimeMetamodel: start build
+RuntimeMetamodel -> GHA: run tests
+RuntimeMetamodel -> OSSRH: publish release
+deactivate RuntimeMetamodel
+
+activate Connector
+ReleasePipeline -> Connector: start build
+Connector -> GHA: run tests
+Connector -> OSSRH: publish release
+deactivate Connector
+
+activate FederatedCatalog
+ReleasePipeline -> FederatedCatalog: start build
+FederatedCatalog -> GHA: run tests
+FederatedCatalog -> OSSRH: publish release
+deactivate FederatedCatalog
+
+activate IdentityHub
+ReleasePipeline -> IdentityHub: start build
+IdentityHub -> GHA: run tests
+IdentityHub -> OSSRH: publish release
+deactivate IdentityHub
+
+activate RegistrationService
+ReleasePipeline -> RegistrationService: start build
+RegistrationService -> GHA: run tests
+RegistrationService -> OSSRH: publish release
+deactivate RegistrationService
+
+ReleasePipeline -> "Discord": notify success/failure
+@enduml
