@@ -3,21 +3,21 @@ pipeline {
     stages {
         stage('runtime-metamodel') {
             steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'gradleplugins'), string(name: 'WORKFLOW', value: 'test.yaml')]
+//                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'gradleplugins'), string(name: 'WORKFLOW', value: 'test.yaml')]
                 build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/GradlePlugins.git')]
             }
         }
 
         stage('connector') {
             steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'connector'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+//                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'connector'), string(name: 'WORKFLOW', value: 'verify.yaml')]
                 build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/Connector.git')]
             }
         }
 
         stage("identityhub"){
             steps{
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'gradleplugins'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+//                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'gradleplugins'), string(name: 'WORKFLOW', value: 'verify.yaml')]
                 build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/IdentityHub.git')]
             }
         }
@@ -26,14 +26,14 @@ pipeline {
             parallel {
                 stage("registration-service"){
                     steps {
-                        build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'registrationservice'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+//                        build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'registrationservice'), string(name: 'WORKFLOW', value: 'verify.yaml')]
                         build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/RegistrationService.git')]
                     }
 
                 }
                 stage("federated-catalog"){
                     steps {
-                        build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'federatedcatalog'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+//                        build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'federatedcatalog'), string(name: 'WORKFLOW', value: 'verify.yaml')]
                         build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/FederatedCatalog.git')]
                     }
                 }
