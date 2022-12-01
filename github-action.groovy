@@ -17,8 +17,12 @@ pipeline {
         }
         stage("wait-for-job-created") {
             steps {
-                waitUntil {
-
+                timeout(1) {
+                    waitUntil {
+                        numRuns=sh(script: '''
+                            curl --fail -X POST -u $BOT:$BOTTOKEN -H \'Accept: application/vnd.github.v3+json\' "https://api.github.com/repos/$OWNER/$REPO/actions/workflows/$WORKFLOW/dispatches"''',
+                         returnStdout: true)
+                    }
                 }
             }
         }
