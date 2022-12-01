@@ -3,40 +3,38 @@ pipeline {
     stages {
         stage('runtime-metamodel') {
             steps {
-                // trigger test in github actions, if successful, build
-                build job: '../Build-Component-Template', parameters: [string(name: 'COMPONENT_GIT_REPO', value: 'https://github.com/eclipse-edc/GradlePlugins.git')]
+                build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/GradlePlugins.git')]
             }
         }
-    
+
         stage('connector') {
             steps {
-                // trigger test in github actions, if successful, build
-                build job: '../Build-Component-Template', parameters: [string(name: 'COMPONENT_GIT_REPO', value: 'https://github.com/eclipse-edc/Connector.git')]
-            }   
+                build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/Connector.git')]
+            }
         }
 
         stage("identityhub"){
             steps{
-                build job: '../Build-Component-Template', parameters: [string(name: 'COMPONENT_GIT_REPO', value: 'https://github.com/eclipse-edc/IdentityHub.git')]
+                build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/IdentityHub.git')]
             }
         }
-    
+
         stage('other') {
             parallel {
                 stage("registration-service"){
-                    steps { 
-                        build job: '../Build-Component-Template', parameters: [string(name: 'COMPONENT_GIT_REPO', value: 'https://github.com/eclipse-edc/RegistrationService.git')]
+                    steps {
+                        build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/RegistrationService.git')]
                     }
-                    
+
                 }
                 stage("federated-catalog"){
                     steps {
-                        build job: '../Build-Component-Template', parameters: [string(name: 'COMPONENT_GIT_REPO', value: 'https://github.com/eclipse-edc/FederatedCatalog.git')]
+                        build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/FederatedCatalog.git')]
                     }
                 }
             }
         }
-        
+
     }
     post {
         always {
