@@ -9,19 +9,15 @@ pipeline {
         stage("start-github-workflow") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                    sh(script: '''
-                            curl --fail -X POST -u $BOT:$BOTTOKEN -H \'Accept: application/vnd.github.v3+json\' -d \'{"ref":"main"}\' "https://api.github.com/repos/$OWNER/$REPO/actions/workflows/$WORKFLOW/dispatches"''',
-                            returnStdout: true)
+                    sh './scripts/start_build.sh $OWNER $REPO $WORKFLOW $BOT $BOTTOKEN'
                 }
             }
         }
         stage("wait-for-job-created") {
             steps {
-                timeout(1) {
-                    waitUntil {
-                        numRuns=sh(script: '''
-                            curl --fail -X POST -u $BOT:$BOTTOKEN -H \'Accept: application/vnd.github.v3+json\' "https://api.github.com/repos/$OWNER/$REPO/actions/workflows/$WORKFLOW/dispatches"''',
-                         returnStdout: true)
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/wait_for_build.sh $OWNER $REPO $WORKFLOW $BOT $BOTTOKEN'
                     }
                 }
             }
