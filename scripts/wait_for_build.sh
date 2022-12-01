@@ -9,14 +9,14 @@ PWD="$5"
 if [ "$#" -eq 4 ]; then
   # use cURL with a Personal Access Token
   echo "Using USER as personal access token for the GitHub API"
-  HEADERS=(-H "Authorization: Bearer $USER" -H "Accept: application/vnd.github.v3+json")
+  PARAMS=(-H "Authorization: Bearer $USER" -H "Accept: application/vnd.github.v3+json")
 
 elif
   [ "$#" -eq 5 ]
 then
   # use basic auth with cUrl
   echo "Using USER/PWD authentication for the GitHub API"
-  HEADERS=(-u "$USER":"$PWD" -H "Accept: application/vnd.github.v3+json")
+  PARAMS=(-u "$USER":"$PWD" -H "Accept: application/vnd.github.v3+json")
 
 else
   echo "Usage: start_build.sh OWNER REPO WORKFLOW USER [PWD]"
@@ -31,17 +31,19 @@ fi
 numRuns=0
 echo "Waiting for run to start"
 while [ "$numRuns" -le "0" ]; do
-  runs=$(curl --fail -sSl "${HEADERS[@]}" -X GET "https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW}/runs?event=workflow_dispatch&status=in_progress")
+  # fetch the latest run triggered by a workflow_dispatch event
+  runs=$(curl --fail -sSl "${PARAMS[@]}" -X GET "https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW}/runs?event=workflow_dispatch&status=in_progress")
   numRuns=$(echo "$runs" | jq -r '.total_count')
   echo " - found $numRuns"
   sleep 3
 done
 
+# contains the ID of the latest/most recent run
 runId=$(echo "$runs" | jq -r '.workflow_runs[0].id')
 
 echo "Checking run ID $runId"
 while [ "$status" != "completed" ]; do
-  json=$(curl --fail -sSl "${HEADERS[@]}" -X GET "https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${runId}")
+  json=$(curl --fail -sSl "${PARAMS[@]}" -X GET "https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${runId}")
   status=$(echo "$json" | jq -r '.status')
   conclusion=$(echo "$json" | jq -r '.conclusion')
   echo "$(date) :: $runId is $status"
