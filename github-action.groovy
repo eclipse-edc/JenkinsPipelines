@@ -1,13 +1,5 @@
-def run_id = ''
-
 pipeline {
     agent any
-    environment {
-        // TODO: convert these into job parameters
-        OWNER = 'eclipse-edc'
-        REPO = 'GradlePlugins'
-        WORKFLOW = 'test.yaml'
-    }
     stages {
         stage("start-github-workflow") {
             steps {
@@ -28,12 +20,13 @@ pipeline {
         }
         stage("wait-until-job-completed") {
             steps {
+                script {
+                    run_id = readFile('run.id')
+                    currentBuild.displayName = "$OWNER/$REPO/$WORKFLOW/$run_id"
+                }
                 timeout(60) {
                     withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                        script {
-                            run_id = readFile('run.id').trim()
-                        }
-                        sh './scripts/wait_job_completed.sh $OWNER $REPO $run_id $BOT $BOTTOKEN'
+                        sh './scripts/wait_job_completed.sh $OWNER $REPO $BOT $BOTTOKEN'
                     }
                 }
             }

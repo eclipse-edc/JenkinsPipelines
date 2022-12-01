@@ -41,4 +41,4 @@ done
 # contains the ID of the latest/most recent run
 RUN_ID=$(echo "$runs" | jq -r '.workflow_runs[0].id')
 
-echo "$RUN_ID" >run.id
+echo "$RUN_ID" > ./run.id
