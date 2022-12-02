@@ -17,7 +17,7 @@ pipeline {
 
         stage("identityhub"){
             steps{
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'gradleplugins'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'identityhub'), string(name: 'WORKFLOW', value: 'verify.yaml')]
                 build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/IdentityHub.git')]
             }
         }

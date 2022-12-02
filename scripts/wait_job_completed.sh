@@ -29,7 +29,7 @@ while [ "$status" != "completed" ]; do
   status=$(echo "$json" | jq -r '.status')
   conclusion=$(echo "$json" | jq -r '.conclusion')
   echo "$(date) :: Run $RUN_ID is $status"
-  sleep 5
+  sleep 30 # sleep for 30 seconds before we check again, lets keep API requests low
 done
 
 echo "Run completed, conclusion: $conclusion"
