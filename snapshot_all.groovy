@@ -35,10 +35,20 @@ pipeline {
                 build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/FederatedCatalog.git')]
             }
         }
-        stage("test-mvd-local") {
-            steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cd.yaml')]
+        stage("test-mvd") {
+            parallel {
+                stage("run-embedded-resources") {
+                    steps {
+                        build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cd.yaml')]
+                    }
+                }
+                stage("run-with-azure-resources") {
+                    steps {
+                        build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cloud-cd.yaml')]
+                    }
+                }
             }
+
         }
 
     }
