@@ -42,11 +42,11 @@ pipeline {
                         build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cd.yaml')]
                     }
                 }
-                stage("run-with-azure-resources") {
-                    steps {
-                        build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cloud-cd.yaml')]
-                    }
-                }
+//                stage("run-with-azure-resources") {
+//                    steps {
+//                        build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cloud-cd.yaml')]
+//                    }
+//                }
             }
 
         }
