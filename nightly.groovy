@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     environment {
         // this could be obtained from somewhere else, e.g. a file on github
         VERSION = """${sh(returnStdout: true, script: 'echo "0.0.1-$(date +"%Y%m%d")-SNAPSHOT"')}""".trim()
