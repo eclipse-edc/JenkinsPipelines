@@ -51,6 +51,11 @@ pipeline {
                     then
                         # set the version property if a version was specified, use defaults otherwise
                         versionProp="-Pversion=$VERSION"
+
+                        # replace the version into the gradle files, if they exist
+                        if [[ -e gradle.properties ]] then sed -i "s/0.0.1-SNAPSHOT/$VERSION/g" gradle.properties; fi
+                        if [[ -e settings.gradle.kts ]] then sed -i "s/0.0.1-SNAPSHOT/$VERSION/g" settings.gradle.kts; fi
+
                         # if the version doesn't end with -SNAPSHOT we need to handle staging/releasing
                         if [[ $VERSION != *-SNAPSHOT ]]
                         then
