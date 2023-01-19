@@ -2,17 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage("init") {
-            steps {
-                script {
-                    currentBuild.displayName = sh(script: 'echo "$(cut -d\'/\' -f5 <<< ${REPO})"', returnStdout: true).trim()
-                }
-            }
-        }
         stage("clone-repo") {
             steps {
                 cleanWs()
-                git(branch: "main", url: "${params.REPO}")
+                git(branch: "main", url: "https://github.com/ndr-brt/EDC-all-in-one-publish")
+                sh 'git submodule update --init --recursive'
             }
         }
 
@@ -38,7 +32,14 @@ pipeline {
             }
         }
 
-        stage("build-component") {
+        stage("prepare") {
+            steps {
+                echo "Prepare build with version $VERSION"
+                sh './prepare.sh'
+            }
+        }
+
+        stage("publish") {
             steps {
                 withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'PASSPHRASE'), usernamePassword(credentialsId: 'ossrh-account', passwordVariable: 'OSSRH_PASSWORD', usernameVariable: 'OSSRH_USER')]) {
 
