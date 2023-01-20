@@ -2,6 +2,13 @@ pipeline {
     agent any
 
     stages {
+        stage("init") {
+            steps {
+                script {
+                    currentBuild.displayName = sh(script: 'echo "$VERSION"', returnStdout: true).trim()
+                }
+            }
+        }
         stage("clone-repo") {
             steps {
                 cleanWs()
