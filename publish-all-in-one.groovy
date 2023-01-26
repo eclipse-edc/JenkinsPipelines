@@ -13,7 +13,6 @@ pipeline {
             steps {
                 cleanWs()
                 git(branch: "main", url: "https://github.com/ndr-brt/EDC-all-in-one-publish")
-                sh 'git submodule update --init --recursive'
             }
         }
 
