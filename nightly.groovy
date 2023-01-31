@@ -5,40 +5,50 @@ pipeline {
         VERSION = """${sh(returnStdout: true, script: 'echo "0.0.1-$(date +"%Y%m%d")-SNAPSHOT"')}""".trim()
     }
     stages {
-        stage("build-components") {
-            parallel {
-                stage('runtime-metamodel') {
-                    steps {
-                        build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/GradlePlugins.git'), string(name: 'VERSION', value: "${VERSION}")]
-                    }
-                }
-
-                stage('connector') {
-                    steps {
-                        build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/Connector.git'), string(name: 'VERSION', value: "${VERSION}")]
-                    }
-                }
-
-                stage("identityhub") {
-                    steps {
-                        build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/IdentityHub.git'), string(name: 'VERSION', value: "${VERSION}")]
-                    }
-                }
-
-                stage("registration-service") {
-                    steps {
-                        build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/RegistrationService.git'), string(name: 'VERSION', value: "${VERSION}")]
-                    }
-
-                }
-                stage("federated-catalog") {
-                    steps {
-                        build job: '../Build-Component-Template', parameters: [string(name: 'REPO', value: 'https://github.com/eclipse-edc/FederatedCatalog.git'), string(name: 'VERSION', value: "${VERSION}")]
-                    }
-                }
+        stage('init') {
+            steps {
+                currentBuild.displayName = sh(script: 'echo "$VERSION"', returnStdout: true).trim()
+            }
+        }
+        stage('test-runtime-metamodel') {
+            steps {
+                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'gradleplugins'), string(name: 'WORKFLOW', value: 'test.yaml')]
             }
         }
 
+        stage('test-connector') {
+            steps {
+                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'connector'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+            }
+        }
+
+        stage("test-identityhub") {
+            steps {
+                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'identityhub'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+            }
+        }
+
+        stage("test-registration-service") {
+            steps {
+                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'registrationservice'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+            }
+
+        }
+        stage("test-federated-catalog") {
+            steps {
+                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'federatedcatalog'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+            }
+        }
+        stage("test-mvd") {
+            steps {
+                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cd.yaml')]
+            }
+        }
+        stage('build-publish-components') {
+            steps {
+                build job: '../Publish-All-In-One', parameters: [string(name: 'VERSION', value: "${VERSION}")]
+            }
+        }
     }
     post {
         always {
