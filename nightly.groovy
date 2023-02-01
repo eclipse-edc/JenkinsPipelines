@@ -7,7 +7,9 @@ pipeline {
     stages {
         stage('init') {
             steps {
-                currentBuild.displayName = sh(script: 'echo "$VERSION"', returnStdout: true).trim()
+                script {
+                    currentBuild.displayName = sh(script: 'echo "$VERSION"', returnStdout: true).trim()
+                }
             }
         }
         stage('test-runtime-metamodel') {
