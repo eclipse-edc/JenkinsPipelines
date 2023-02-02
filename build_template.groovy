@@ -12,7 +12,7 @@ pipeline {
         stage("clone-repo") {
             steps {
                 cleanWs()
-                git(branch: "main", url: "${params.REPO}")
+                git(branch: "${params.BRANCH}", url: "${params.REPO}")
             }
         }
 
