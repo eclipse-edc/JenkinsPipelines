@@ -52,6 +52,10 @@ pipeline {
                         # set the version property if a version was specified, use defaults otherwise
                         versionProp="-Pversion=$VERSION"
 
+                        # update the version in the codebase
+                        sed -i "s#0.0.1-SNAPSHOT#$VERSION#g" gradle.properties
+                        sed -i "s#0.0.1-SNAPSHOT#$VERSION#g" $(find . -name "*.java")
+
                         # if the version doesn't end with -SNAPSHOT we need to handle staging/releasing
                         if [[ $VERSION != *-SNAPSHOT ]]
                         then
