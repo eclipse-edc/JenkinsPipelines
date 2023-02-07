@@ -21,8 +21,14 @@ BRANCH_NAME="main"
 STATUS="$1"
 JENKINS_JOB="$2"
 BUILD_NUMBER="$3"
-REPO_URL="$4"
-CONTENT="$5"
+REPO_URL="1"
+if [ -z "$5" ]; 
+then
+  echo "No content supplied, using default."
+  CONTENT="I finished a job"
+else
+  CONTENT="$5"
+fi
 
 # do not run script if required parameters are not supplied
 if [ "$#" -lt 5 ]; then
@@ -36,10 +42,7 @@ if [ "$#" -lt 5 ]; then
   exit 1
 fi
 
-if [ -z "$6" ]; then
-  echo "No content supplied, using default."
-  CONTENT="I finished a job"
-fi
+
 
 export WEBHOOK_URL_SAFE=$(echo "${WEBHOOK_URL}" | sed "s#webhooks/.*#webhooks/<masked_url>#g")
 
