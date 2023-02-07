@@ -48,13 +48,13 @@ pipeline {
         }
         stage('build-publish-components') {
             steps {
-                build job: '../Publish-All-In-One', parameters: [string(name: 'VERSION', value: "${VERSION}")]
+                build job: 'Publish-All-In-One', parameters: [string(name: 'VERSION', value: "${VERSION}")]
             }
         }
     }
     post {
         always {
-            build(job: "../../DiscordWebhook", parameters: [string(name: "UPSTREAM_JOB_URL", value: "${env.BUILD_URL}"), string(name: "JOB_NAME", value: "${env.JOB_NAME}"), string(name: "BUILD_NUMBER", value: "${env.BUILD_NUMBER}"), string(name: "REPO_URL", value: "https://github.com/eclipse-edc/Connector"), string(name: "CONTENT", value: "Look, I built a nightly version ${VERSION} of the components!")])
+            build(job: "DiscordWebhook", parameters: [string(name: "UPSTREAM_JOB_URL", value: "${env.BUILD_URL}"), string(name: "JOB_NAME", value: "${env.JOB_NAME}"), string(name: "BUILD_NUMBER", value: "${env.BUILD_NUMBER}"), string(name: "REPO_URL", value: "https://github.com/eclipse-edc/Connector"), string(name: "CONTENT", value: "Look, I built a nightly version ${VERSION} of the components!")])
         }
     }
 }
