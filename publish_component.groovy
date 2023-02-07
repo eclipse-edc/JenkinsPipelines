@@ -38,7 +38,7 @@ pipeline {
             }
         }
 
-        stage("build-component") {
+        stage("publish-component") {
             steps {
                 withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'PASSPHRASE'), usernamePassword(credentialsId: 'ossrh-account', passwordVariable: 'OSSRH_PASSWORD', usernameVariable: 'OSSRH_USER')]) {
                     sh '''
