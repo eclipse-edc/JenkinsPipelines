@@ -69,4 +69,10 @@ pipeline {
         }
     }
 
+    post {
+        always {
+            build(job: "DiscordWebhook", parameters: [string(name: "UPSTREAM_JOB_URL", value: "${env.BUILD_URL}"), string(name: "JOB_NAME", value: "${env.JOB_NAME}"), string(name: "BUILD_NUMBER", value: "${env.BUILD_NUMBER}"), string(name: "REPO_URL", value: "${params.REPO}"), string(name: "CONTENT", value: "Look, I built a ${VERSION} of ${REPO}")])
+        }
+    }
+
 }
