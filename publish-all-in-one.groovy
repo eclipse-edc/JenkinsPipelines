@@ -12,7 +12,7 @@ pipeline {
         stage("clone-repo") {
             steps {
                 cleanWs()
-                git(branch: "main", url: "https://github.com/ndr-brt/EDC-all-in-one-publish")
+                git(branch: "main", url: "https://github.com/eclipse-edc/Release.git")
             }
         }
 
