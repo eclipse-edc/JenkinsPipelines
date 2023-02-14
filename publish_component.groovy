@@ -71,7 +71,12 @@ pipeline {
 
     post {
         always {
-            build(job: "DiscordWebhook", parameters: [string(name: "UPSTREAM_JOB_URL", value: "${env.BUILD_URL}"), string(name: "JOB_NAME", value: "${env.JOB_NAME}"), string(name: "BUILD_NUMBER", value: "${env.BUILD_NUMBER}"), string(name: "REPO_URL", value: "${params.REPO}"), string(name: "CONTENT", value: "Look, I published ${REPO} version ${VERSION}")])
+            cleanWs()
+            checkout scm
+            sh """
+                chmod +x scripts/discord_webhook.sh
+                ./scripts/discord_webhook.sh "${currentBuild.getCurrentResult()}" "${env.JOB_NAME}" "${env.BUILD_NUMBER}" "${params.REPO}" "Look, I published ${REPO} version ${VERSION}"
+            """
         }
     }
 
