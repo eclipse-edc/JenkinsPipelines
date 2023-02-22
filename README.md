@@ -3,16 +3,6 @@
 This repository contains the Jenkins Pipelines used for the EDC CI:
 https://ci.eclipse.org/edc/
 
-## [discord_webhook](./discord_webhook.groovy)
-Sends a discord webhook advising that a job has been completed.
-
-Variables:
-- `UPSTREAM_JOB_URL`: the Jenkins Job URL
-- `JOB_NAME`: the Jenkins Job name
-- `BUILD_NUMBER`: the Jenkins Job build number
-- `REPO_URL`: the component url
-- `CONTENT`: text that will be added to the message
-
 ## [github-action](./github-action.groovy)
 Starts a GitHub action workflow and waits for its completion.
 

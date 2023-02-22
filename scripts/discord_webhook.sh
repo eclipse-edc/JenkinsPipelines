@@ -22,7 +22,7 @@ STATUS="$1"
 JENKINS_JOB="$2"
 BUILD_NUMBER="$3"
 REPO_URL="1"
-if [ -z "$5" ]; 
+if [ -z "$5" ];
 then
   echo "No content supplied, using default."
   CONTENT="I finished a job"
@@ -70,19 +70,19 @@ echo -e "[Webhook]: Sending webhook to Discord..."
 echo
 
 case ${STATUS} in
-"success")
+"SUCCESS")
   EMBED_COLOR=3066993
   STATUS_MESSAGE="Passed"
   AVATAR="${SUCCESS_AVATAR}"
   ;;
-"failure")
+"FAILURE")
   EMBED_COLOR=15158332
   STATUS_MESSAGE="Failed"
   AVATAR="${FAILURE_AVATAR}"
   ;;
 *)
   EMBED_COLOR=8421504
-  STATUS_MESSAGE="Status Unknown"
+  STATUS_MESSAGE="Status Unknown: ${STATUS}"
   echo "status \"${STATUS}\" --> ${STATUS_MESSAGE}"
   AVATAR="${UNKNOWN_AVATAR}"
   ;;

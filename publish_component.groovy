@@ -71,12 +71,14 @@ pipeline {
 
     post {
         always {
-            cleanWs()
-            checkout scm
-            sh """
-                chmod +x scripts/discord_webhook.sh
-                ./scripts/discord_webhook.sh "${currentBuild.getCurrentResult()}" "${env.JOB_NAME}" "${env.BUILD_NUMBER}" "${params.REPO}" "Look, I published ${REPO} version ${VERSION}"
-            """
+            withCredentials([string(credentialsId: 'discord-webhook', variable: 'WEBHOOK_URL')]) {
+                cleanWs()
+                checkout scm
+                sh """
+                    chmod +x scripts/discord_webhook.sh
+                    ./scripts/discord_webhook.sh "${currentBuild.getCurrentResult()}" "${env.JOB_NAME}" "${env.BUILD_NUMBER}" "${params.REPO}" "Look, I published ${REPO} version ${VERSION}"
+                """
+            }
         }
     }
 
