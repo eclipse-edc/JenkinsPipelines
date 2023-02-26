@@ -14,8 +14,6 @@
 # channel.
 # It is loosely based on https://github.com/symboxtra/universal-ci-discord-webhook/blob/master/send.sh, but with many simplifications.
 
-# the script expect a WEBHOOK_URL env variable containing the discord webhook url
-
 BRANCH_NAME="main"
 
 STATUS="$1"
@@ -31,9 +29,9 @@ else
 fi
 
 # do not run script if required parameters are not supplied
+# the script expect a WEBHOOK_URL env variable containing the discord webhook url
 if [ "$#" -lt 5 ]; then
-  echo "usage: discord_webhook.sh WEBHOOK_URL STATUS JOB_NAME BUILD_NUMBER REPO_URL CONTENT"
-  echo " WEBHOOK_URL   = URL of the webhook to invoke, e.g. for discord"
+  echo "usage: discord_webhook.sh STATUS JOB_NAME BUILD_NUMBER REPO_URL CONTENT"
   echo " STATUS        = \"success\" or \"failure\". Will use \"Unknown\" when anything else is passed"
   echo " JOB_NAME      = name of the job EXACTLY as configured in Jenkins. Use quotes if the job name contains blanks"
   echo " BUILD_NUMBER  = jenkins build number, must be an integer"
@@ -123,7 +121,7 @@ WEBHOOK_DATA='{
   } ]
 }'
 
-curl --fail --progress-bar -A "${CI_PROVIDER}-Webhook" -H "Content-Type:application/json" -d "${WEBHOOK_DATA}" "${WEBHOOK_URL}"
+curl --fail --progress-bar -A "${CI_PROVIDER}-Webhook" -H "Content-Type:application/json" -d "${WEBHOOK_DATA}" ${WEBHOOK_URL}
 
 if [ $? -ne 0 ]; then
   echo -e "Webhook data:\\n${WEBHOOK_DATA}"
