@@ -41,11 +41,6 @@ pipeline {
                 build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'federatedcatalog'), string(name: 'WORKFLOW', value: 'verify.yaml')]
             }
         }
-        stage("test-mvd") {
-            steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cd.yaml')]
-            }
-        }
         stage('build-publish-components') {
             steps {
                 build job: 'Publish-All-In-One', parameters: [string(name: 'VERSION', value: "${VERSION}")]
