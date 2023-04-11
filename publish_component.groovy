@@ -76,7 +76,7 @@ pipeline {
                 checkout scm
                 sh """
                     chmod +x scripts/discord_webhook.sh
-                    ./scripts/discord_webhook.sh "${currentBuild.getCurrentResult()}" "${env.JOB_NAME}" "${env.BUILD_NUMBER}" "${params.REPO}" "Look, I published ${REPO} version ${VERSION}"
+                    ./scripts/discord_webhook.sh "${currentBuild.getCurrentResult()}" "${env.JOB_NAME}" "${env.BUILD_NUMBER}" "${params.REPO}" "${VERSION}"
                 """
             }
         }

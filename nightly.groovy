@@ -60,7 +60,7 @@ pipeline {
                 checkout scm
                 sh """
                     chmod +x scripts/discord_webhook.sh
-                    ./scripts/discord_webhook.sh "${currentBuild.getCurrentResult()}" "${env.JOB_NAME}" "${env.BUILD_NUMBER}" "https://github.com/eclipse-edc/Connector" "Look, I built a nightly version ${VERSION} of the components!"
+                    ./scripts/discord_webhook.sh "${currentBuild.getCurrentResult()}" "${env.JOB_NAME}" "${env.BUILD_NUMBER}" "https://github.com/eclipse-edc/Connector" "${VERSION}"
                 """
             }
         }

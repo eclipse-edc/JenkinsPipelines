@@ -19,14 +19,16 @@ BRANCH_NAME="main"
 STATUS="$1"
 JENKINS_JOB="$2"
 BUILD_NUMBER="$3"
-REPO_URL="1"
+REPO_URL="$4"
+
 if [ -z "$5" ];
 then
-  echo "No content supplied, using default."
-  CONTENT="I finished a job"
+  VERSION = "0.0.1-SNAPSHOT"
 else
-  CONTENT="$5"
+  VERSION = "$5"
 fi
+
+CONTENT="${JENKINS_JOB} build ${STATUS}. Version ${VERSION}"
 
 # do not run script if required parameters are not supplied
 # the script expect a WEBHOOK_URL env variable containing the discord webhook url
@@ -36,11 +38,9 @@ if [ "$#" -lt 5 ]; then
   echo " JOB_NAME      = name of the job EXACTLY as configured in Jenkins. Use quotes if the job name contains blanks"
   echo " BUILD_NUMBER  = jenkins build number, must be an integer"
   echo " REPO_URL      = URL to the (Github) repository"
-  echo " CONTENT       = [OPTIONAL] a string containing message content to be posted to. Defaults to \"I finished a job\""
+  echo " VERSION       = [OPTIONAL] the version of the built component. Defaults to \"0.0.1-SNAPSHOT\""
   exit 1
 fi
-
-
 
 export WEBHOOK_URL_SAFE=$(echo "${WEBHOOK_URL}" | sed "s#webhooks/.*#webhooks/<masked_url>#g")
 
@@ -49,6 +49,7 @@ echo "'"STATUS:       "${STATUS}""'"
 echo "'"JENKINS_JOB:  "${JENKINS_JOB}""'"
 echo "'"BUILD_NUMBER: "${BUILD_NUMBER}""'"
 echo "'"REPO_URL:     "${REPO_URL}""'"
+echo "'"VERSION:     "${VERSION}""'"
 echo "'"CONTENT:      "${CONTENT}""'"
 
 
