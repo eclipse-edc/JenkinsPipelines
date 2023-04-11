@@ -14,36 +14,60 @@ pipeline {
         }
         stage('test-runtime-metamodel') {
             steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'gradleplugins'), string(name: 'WORKFLOW', value: 'test.yaml')]
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "gradleplugins" "test.yaml" $BOT $BOTTOKEN'
+                    }
+                }
             }
         }
 
         stage('test-connector') {
             steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'connector'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "connector" "verify.yaml" $BOT $BOTTOKEN'
+                    }
+                }
             }
         }
 
         stage("test-identityhub") {
             steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'identityhub'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "identityhub" "verify.yaml" $BOT $BOTTOKEN'
+                    }
+                }
             }
         }
 
         stage("test-registration-service") {
             steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'registrationservice'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "registrationservice" "verify.yaml" $BOT $BOTTOKEN'
+                    }
+                }
             }
 
         }
         stage("test-federated-catalog") {
             steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'federatedcatalog'), string(name: 'WORKFLOW', value: 'verify.yaml')]
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "federatedcatalog" "verify.yaml" $BOT $BOTTOKEN'
+                    }
+                }
             }
         }
         stage("test-mvd") {
             steps {
-                build job: 'Start-Github-Action', parameters: [string(name: 'OWNER', value: 'eclipse-edc'), string(name: 'REPO', value: 'minimumviabledataspace'), string(name: 'WORKFLOW', value: 'cd.yaml')]
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "minimumviabledataspace" "cd.yaml" $BOT $BOTTOKEN'
+                    }
+                }
             }
         }
         stage('build-publish-components') {
