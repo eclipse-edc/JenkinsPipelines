@@ -3,14 +3,6 @@
 This repository contains the Jenkins Pipelines used for the EDC CI:
 https://ci.eclipse.org/edc/
 
-## [github-action](./github-action.groovy)
-Starts a GitHub action workflow and waits for its completion.
-
-Variables:
-- `OWNER`: the organization name
-- `REPO`: the repository name
-- `WORKFLOW`: the workflow to be launched
-
 ## [nightly.groovy](./nightly.groovy)
 Builds and publish all the components every night.
 

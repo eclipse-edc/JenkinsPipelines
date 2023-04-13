@@ -17,7 +17,7 @@ elif [ "$#" -eq 5 ]; then
   PARAMS=(-u "$USER":"$PWD" -H "Accept: application/vnd.github.v3+json")
 
 else
-  echo "Usage: start_build.sh OWNER REPO WORKFLOW USER [PWD]"
+  echo "Usage: github_action.sh OWNER REPO WORKFLOW USER [PWD]"
   echo "OWNER    = the owner/org of the github repo"
   echo "REPO     = the name of the github repo"
   echo "WORKFLOW = the name of the workflow file to run, or its ID"
