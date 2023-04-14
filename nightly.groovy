@@ -12,64 +12,17 @@ pipeline {
                 }
             }
         }
-        stage('test-runtime-metamodel') {
+
+        stage('test') {
             steps {
-                timeout(60) {
+                timeout(120) {
                     withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                        sh './scripts/github_action.sh "eclipse-edc" "gradleplugins" "test.yaml" "" $BOT $BOTTOKEN'
+                        sh './scripts/test_components.sh $BOT $BOTTOKEN'
                     }
                 }
             }
         }
 
-        stage('test-connector') {
-            steps {
-                timeout(60) {
-                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                        sh './scripts/github_action.sh "eclipse-edc" "connector" "verify.yaml" "" $BOT $BOTTOKEN'
-                    }
-                }
-            }
-        }
-
-        stage("test-identityhub") {
-            steps {
-                timeout(60) {
-                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                        sh './scripts/github_action.sh "eclipse-edc" "identityhub" "verify.yaml" "" $BOT $BOTTOKEN'
-                    }
-                }
-            }
-        }
-
-        stage("test-registration-service") {
-            steps {
-                timeout(60) {
-                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                        sh './scripts/github_action.sh "eclipse-edc" "registrationservice" "verify.yaml" "" $BOT $BOTTOKEN'
-                    }
-                }
-            }
-
-        }
-        stage("test-federated-catalog") {
-            steps {
-                timeout(60) {
-                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                        sh './scripts/github_action.sh "eclipse-edc" "federatedcatalog" "verify.yaml" "" $BOT $BOTTOKEN'
-                    }
-                }
-            }
-        }
-        stage("test-mvd") {
-            steps {
-                timeout(60) {
-                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                        sh './scripts/github_action.sh "eclipse-edc" "minimumviabledataspace" "cd.yaml" "" $BOT $BOTTOKEN'
-                    }
-                }
-            }
-        }
         stage('build-publish-components') {
             steps {
                 build job: 'Publish-All-In-One', parameters: [string(name: 'VERSION', value: "${VERSION}")]
