@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        // this could be obtained from somewhere else, e.g. a file on github
-        VERSION = """${sh(returnStdout: true, script: 'echo "0.0.1-$(date +"%Y%m%d")-SNAPSHOT"')}""".trim()
+
     }
     stages {
         stage('init') {
@@ -12,13 +11,9 @@ pipeline {
                 }
             }
         }
-        stage('test-runtime-metamodel') {
+        stage('publish-artifacts') {
             steps {
-                timeout(60) {
-                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
-                        sh './scripts/github_action.sh "eclipse-edc" "gradleplugins" "test.yaml" "" $BOT $BOTTOKEN'
-                    }
-                }
+                  build job: 'Publish-All-In-One', parameters: [string(name: 'VERSION', value: "${VERSION}")]
             }
         }
 
@@ -70,11 +65,63 @@ pipeline {
                 }
             }
         }
+
         stage('build-publish-components') {
             steps {
                 build job: 'Publish-All-In-One', parameters: [string(name: 'VERSION', value: "${VERSION}")]
             }
         }
+
+        stage('release-gradleplugins') {
+            steps {
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "gradleplugins" "release-all-java.yaml" "{\"metamodel_version\", \"${VERSION}\"}" $BOT $BOTTOKEN'
+                    }
+                }
+            }
+        }
+
+        stage('release-connector') {
+            steps {
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "connector" "release-edc.yaml" "{\"edc_version\", \"${VERSION}\"}" $BOT $BOTTOKEN'
+                    }
+                }
+            }
+        }
+
+        stage('release-identityhub') {
+            steps {
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "identityhub" "release-identityhub.yaml" "{\"ih_version\", \"${VERSION}\"}" $BOT $BOTTOKEN'
+                    }
+                }
+            }
+        }
+
+        stage('release-registrationservice') {
+            steps {
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "registrationservice" "release-registrationservice.yaml" "{\"rs_version\", \"${VERSION}\"}" $BOT $BOTTOKEN'
+                    }
+                }
+            }
+        }
+
+        stage('release-federatedcatalog') {
+            steps {
+                timeout(60) {
+                    withCredentials([usernamePassword(credentialsId: 'github-bot', passwordVariable: 'BOTTOKEN', usernameVariable: 'BOT')]) {
+                        sh './scripts/github_action.sh "eclipse-edc" "federatedcatalog" "release-fcc.yaml" "{\"edc_version\", \"${VERSION}\"}" $BOT $BOTTOKEN'
+                    }
+                }
+            }
+        }
+
     }
 
     post {
