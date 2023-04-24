@@ -48,14 +48,25 @@ if [ "$STATUSCODE" != 204 ]; then
   exit 1
 fi
 
-numRuns=0
+# this is not working anymore, details: https://github.com/orgs/community/discussions/53266
+# numRuns=0
+# echo "$WORKFLOW_PATH :: $(date) :: Waiting for workflow to start"
+# while [ "$numRuns" -le "0" ]; do
+#   sleep 3
+#   # fetch the latest run triggered by a workflow_dispatch event
+#   runs=$(curl --fail -sSl "${PARAMS[@]}" -X GET "https://api.github.com/repos/${WORKFLOW_PATH}/runs?event=workflow_dispatch&status=in_progress")
+#   numRuns=$(echo "$runs" | jq -r '.total_count')
+#   echo "$WORKFLOW_PATH :: $(date) :: found $numRuns runs"
+# done
+
+status=
 echo "$WORKFLOW_PATH :: $(date) :: Waiting for workflow to start"
-while [ "$numRuns" -le "0" ]; do
-  sleep 3
+while [ "$status" != "in_progress" ]; do
+  sleep 5
   # fetch the latest run triggered by a workflow_dispatch event
-  runs=$(curl --fail -sSl "${PARAMS[@]}" -X GET "https://api.github.com/repos/${WORKFLOW_PATH}/runs?event=workflow_dispatch&status=in_progress")
-  numRuns=$(echo "$runs" | jq -r '.total_count')
-  echo "$WORKFLOW_PATH :: $(date) :: found $numRuns runs"
+  runs=$(curl --fail -sSl "${PARAMS[@]}" -X GET "https://api.github.com/repos/${WORKFLOW_PATH}/runs?event=workflow_dispatch&per_page=1")
+  status=$(echo "$runs" | jq -r '.workflow_runs[0].status')
+  echo "$WORKFLOW_PATH :: $(date) :: status $status"
 done
 
 # contains the ID of the latest/most recent run
