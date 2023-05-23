@@ -43,6 +43,8 @@ pipeline {
                 withCredentials([string(credentialsId: 'gpg-passphrase', variable: 'PASSPHRASE'), usernamePassword(credentialsId: 'ossrh-account', passwordVariable: 'OSSRH_PASSWORD', usernameVariable: 'OSSRH_USER')]) {
                     sh '''
                     echo "Will publish ${REPO} with version ${VERSION}"
+                    echo "JAVA_HOME: ${JAVA_HOME}. Java --version:"
+                    java --version
                     cmd=""
                     versionProp=""
 
