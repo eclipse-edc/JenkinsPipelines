@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        jdk 'temurin-jdk17-latest'
+    }
 
     stages {
         stage("init") {
@@ -51,6 +54,8 @@ pipeline {
 
                     sh '''
                     echo "Will build release with version $VERSION"
+                    echo "JAVA_HOME: ${JAVA_HOME}. Java --version:"
+                    java --version
                     cmd=""
                     versionProp=""
 
