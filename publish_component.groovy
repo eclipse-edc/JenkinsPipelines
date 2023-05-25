@@ -57,8 +57,8 @@ pipeline {
                         versionProp="-Pversion=$VERSION"
 
                         # update the version in the codebase
-                        sed -i "s#0.0.1-SNAPSHOT#$VERSION#g" gradle.properties
-                        sed -i "s#0.0.1-SNAPSHOT#$VERSION#g" $(find . -name "*.java")
+                        oldVersion=$(grep "version" gradle.properties | awk -F= '{print $2}')
+                        grep -rlz "$oldVersion" . | xargs sed -i "s/$oldVersion/$VERSION/g"
 
                         # if the version doesn't end with -SNAPSHOT we need to handle staging/releasing
                         if [[ $VERSION != *-SNAPSHOT ]]
