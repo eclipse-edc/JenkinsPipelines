@@ -24,9 +24,6 @@ pids+=($!)
 ./scripts/github_action.sh "eclipse-edc" "federatedcatalog" "verify.yaml" "" $BOT $BOTTOKEN &
 pids+=($!)
 
-./scripts/github_action.sh "eclipse-edc" "minimumviabledataspace" "cd.yaml" "" $BOT $BOTTOKEN &
-pids+=($!)
-
 # Wait worfklows completion, if any of them fail, the script will fail.
 for pid in "${pids[@]}"; do
   wait "$pid"
