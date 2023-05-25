@@ -1,8 +1,11 @@
 pipeline {
     agent any
     environment {
-        // this could be obtained from somewhere else, e.g. a file on github
-        VERSION = """${sh(returnStdout: true, script: 'echo "0.0.1-$(date +"%Y%m%d")-SNAPSHOT"')}""".trim()
+        // this will read the current version gradle.properties (taken from the connector's main branch's) into variables, and then use them to construct
+        // the X.Y.Z-<DATE>-SNAPSHOT version
+        VERSION = """${sh(returnStdout: true, script:
+                'wget -cq https://raw.githubusercontent.com/eclipse-edc/Connector/main/gradle.properties && IFS=.- read -r RELEASE_VERSION_MAJOR RELEASE_VERSION_MINOR RELEASE_VERSION_PATCH SNAPSHOT<<<$(grep "version" gradle.properties | awk -F= \'{print $2}\') && echo "$RELEASE_VERSION_MAJOR.$RELEASE_VERSION_MINOR.$RELEASE_VERSION_PATCH-$(date +"%Y%m%d")-SNAPSHOT"'
+        )}""".trim()
     }
     stages {
         stage('init') {
