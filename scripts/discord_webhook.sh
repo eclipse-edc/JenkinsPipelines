@@ -23,9 +23,9 @@ REPO_URL="$4"
 
 if [ -z "$5" ];
 then
-  VERSION = "0.0.1-SNAPSHOT"
+  VERSION="0.1.0-SNAPSHOT"
 else
-  VERSION = "$5"
+  VERSION="$5"
 fi
 
 CONTENT="${JENKINS_JOB} build ${STATUS}. Version ${VERSION}"
