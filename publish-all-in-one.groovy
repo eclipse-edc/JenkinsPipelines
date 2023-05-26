@@ -57,10 +57,6 @@ pipeline {
                     echo "JAVA_HOME: ${JAVA_HOME}. Java --version:"
                     java --version
                     
-                    # print all versions
-                    grep -inHR "johnrengelman" .
-                    grep -inHR "distributionUrl=" .
-                    
                     cmd=""
                     versionProp=""
 
