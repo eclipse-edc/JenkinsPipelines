@@ -32,7 +32,7 @@ REPO="$OWNER/$REPO_NAME"
 WORKFLOW_PATH="$REPO/actions/workflows/$WORKFLOW"
 
 
-if [ -z "${INPUTS}"]; then
+if [ -z "${INPUTS}" ]; then
   TRIGGER_BODY="{\"ref\": \"main\"}"
 else
   TRIGGER_BODY="{\"ref\": \"main\", \"inputs\": ${INPUTS}}"
