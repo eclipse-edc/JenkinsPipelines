@@ -25,6 +25,15 @@ pids+=($!)
 ./scripts/github_action.sh "eclipse-edc" "federatedcatalog" "release-fcc.yml" "{\"edc_version\", \"${VERSION}\"}" $BOT $BOTTOKEN &
 pids+=($!)
 
+./scripts/github_action.sh "eclipse-edc" "technology-azure" "release-tech-az.yml" "{\"edc_version\", \"${VERSION}\"}" $BOT $BOTTOKEN &
+pids+=($!)
+
+./scripts/github_action.sh "eclipse-edc" "technology-aws" "release-tech-aws.yml" "{\"edc_version\", \"${VERSION}\"}" $BOT $BOTTOKEN &
+pids+=($!)
+
+./scripts/github_action.sh "eclipse-edc" "technology-gcp" "release-tech-gcp.yml" "{\"edc_version\", \"${VERSION}\"}" $BOT $BOTTOKEN &
+pids+=($!)
+
 # Wait for workflow completion, if any of them fails, the script will fail.
 for pid in "${pids[@]}"; do
   wait "$pid"
