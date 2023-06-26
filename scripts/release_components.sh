@@ -10,6 +10,9 @@ set -eu
 
 pids=()
 
+./scripts/github_action.sh "eclipse-edc" "runtime-metamodel" "release-rm.yml" "{\"edc_version\": \"${VERSION}\"}" $BOT $BOTTOKEN &
+pids+=($!)
+
 ./scripts/github_action.sh "eclipse-edc" "gradleplugins" "release-all-java.yml" "{\"metamodel_version\": \"${VERSION}\"}" $BOT $BOTTOKEN &
 pids+=($!)
 

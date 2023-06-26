@@ -9,6 +9,9 @@ set -eu
 
 pids=()
 
+./scripts/github_action.sh "eclipse-edc" "runtime-metamodel" "ci.yaml" "" $BOT $BOTTOKEN &
+pids+=($!)
+
 ./scripts/github_action.sh "eclipse-edc" "gradleplugins" "test.yaml" "" $BOT $BOTTOKEN &
 pids+=($!)
 

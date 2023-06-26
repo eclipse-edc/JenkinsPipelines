@@ -39,6 +39,7 @@ pipeline {
         // at this time, all components should already have their snapshot version bumped, so no need to explicitly supply the VERSION parameter
         stage('publish-new-snapshot') {
             steps {
+                build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/Runtime-Metamodel")]
                 build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/GradlePlugins")]
                 build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/Connector")]
                 build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/IdentityHub")]
