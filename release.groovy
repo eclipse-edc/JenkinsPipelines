@@ -45,6 +45,9 @@ pipeline {
                 build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/IdentityHub")]
                 build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/RegistrationService")]
                 build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/FederatedCatalog")]
+                build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/Technology-Aws")]
+                build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/Technology-Azure")]
+                build job: 'Publish-Component', parameters: [string(name: 'REPO', value: "https://github.com/eclipse-edc/Technology-Gcp")]
             }
         }
 
